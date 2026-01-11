@@ -1,16 +1,19 @@
 # change your configuration here ====================================================
 name: EmShell CI-workflow
 env:
-  BRANCH_NAME: main, master
   COVERAGE_TARGET_NAME: cov
   COVERAGE_PATH: coverage
 
 # when to trigger CI job ============================================================
 on:
   push:
-    branches: [ ${{ env.BRANCH_NAME }} ]
+    branches: 
+      - main
+      - master
   pull_request:
-    branches: [ ${{ env.BRANCH_NAME }} ]
+    branches: 
+      - main
+      - master
 
 # job configuration =================================================================
 jobs:
