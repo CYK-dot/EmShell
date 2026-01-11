@@ -1,5 +1,6 @@
 # change your configuration here ====================================================
 name: EmShell CI-workflow
+
 env:
   COVERAGE_TARGET_NAME: cov
   COVERAGE_PATH: coverage
@@ -24,6 +25,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
       
     - name: Install
       run: |
@@ -66,6 +69,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
       
     - name: Install
       run: |
