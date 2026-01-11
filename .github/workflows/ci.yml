@@ -4,6 +4,7 @@ name: EmShell CI-workflow
 env:
   COVERAGE_TARGET_NAME: cov
   COVERAGE_PATH: coverage
+  EXECUTABLE_TARGET_NAME: test_emshell
 
 # when to trigger CI job ============================================================
 on:
@@ -92,4 +93,4 @@ jobs:
     - name: Run
       working-directory: build_clang
       run: |
-        ./${{ env.COVERAGE_TARGET_NAME }}
+        ./${{ env.EXECUTABLE_TARGET_NAME }}
