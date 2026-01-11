@@ -1,0 +1,87 @@
+# change your configuration here ====================================================
+name: EmShell CI-workflow
+env:
+  BRANCH_NAME: main, master
+  COVERAGE_TARGET_NAME: cov
+  COVERAGE_PATH: coverage
+
+# when to trigger CI job ============================================================
+on:
+  push:
+    branches: [ ${{ env.BRANCH_NAME }} ]
+  pull_request:
+    branches: [ ${{ env.BRANCH_NAME }} ]
+
+# job configuration =================================================================
+jobs:
+  gcc-build:
+    name: GCC Build, Test and Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential git gcc g++ python3 python3-pip
+        pip3 install gcovr
+
+    - name: Configure
+      run: |
+        mkdir build_gcc
+        cd build_gcc
+        cmake -DENABLE_COVERAGE=ON -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
+
+    - name: Build
+      working-directory: build_gcc
+      run: |
+        make -j$(nproc)
+        
+    - name: Run
+      working-directory: build_gcc
+      run: |
+        ctest --output-on-failure
+
+    - name: Coverage
+      working-directory: build_gcc
+      run: |
+        make ${{ env.COVERAGE_TARGET_NAME }}
+
+    - name: Upload
+      uses: codecov/codecov-action@v5
+      with:
+        file: build_gcc/${{ env.COVERAGE_PATH }}/coverage.xml
+        flags: unittests,gcc
+        name: gcc-coverage
+
+  clang-build:
+    name: Clang Build, Test and Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential git clang clang-tidy llvm python3 python3-pip
+        sudo apt-get install -y clang-format clang-tools
+
+    - name: Configure
+      run: |
+        mkdir build_clang
+        cd build_clang
+        cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+
+    - name: Build
+      working-directory: build_clang
+      run: |
+        make -j$(nproc)
+
+    - name: Run
+      working-directory: build_clang
+      run: |
+        ctest --output-on-failure
