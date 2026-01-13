@@ -1,13 +1,50 @@
-### EmShell library =================================================================
-add_library(emshell STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/em_token_matcher.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/em_expr.c
+include(emshell.cmake)
+
+## ==================================================================================
+## @library
+##      emshell_common
+## @brief
+##      commonly used headers
+## ==================================================================================
+add_library(emshell_common INTERFACE)
+target_include_directories(emshell_common INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/common
 )
-target_include_directories(emshell PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/inc
+
+## ==================================================================================
+## @library
+##      libemshell_util.a
+## @brief
+##      utilities
+## ==================================================================================
+emshell_add_library(
+    TARGET
+        emshell_util
+    SRC_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/util/src/em_resp_chain.c
+    INC_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/util/inc
+    DEPEND_LIB
+        emshell_common
 )
-target_compile_options(emshell PRIVATE $<$<CONFIG:Debug>:-g>)
-if(CODE_COVERAGE)
-    target_compile_options(emshell PRIVATE --coverage)
-    target_link_options(emshell PRIVATE --coverage)
-endif()
+
+## ==================================================================================
+## @library
+##      libemshell_core.a
+## @brief
+##      basic parser and editor
+## ==================================================================================
+emshell_add_library(
+    TARGET
+        emshell_core
+    SRC_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/core/src/em_token_matcher.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/core/src/em_expr.c
+    INC_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/core/inc
+    PRV_INC_LIST
+        ${CMAKE_CURRENT_SOURCE_DIR}/core/src
+    DEPEND_LIB
+        emshell_common
+        emshell_util
+)

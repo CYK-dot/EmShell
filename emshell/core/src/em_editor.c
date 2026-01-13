@@ -17,6 +17,11 @@
 
 /* Private typedef ---------------------------------------------------------------*/
 
+typedef enum tagEm_EditorState {
+    EM_EDITOR_STATE_NORMAL = 0,
+    EM_EDITOR_STATE_ESC = 1,
+} Em_EditorState;
+
 /* Private variables -------------------------------------------------------------*/
 
 /* Private function prototypes ---------------------------------------------------*/

@@ -1,5 +1,5 @@
 # change your configuration here ====================================================
-name: EmShell CI-workflow
+name: EmShell-CI
 
 env:
   COVERAGE_TARGET_NAME: cov

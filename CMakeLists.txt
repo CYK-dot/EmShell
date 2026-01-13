@@ -19,12 +19,16 @@ add_subdirectory(./emshell)
 
 ### EmShell testcases ===============================================================
 file(GLOB_RECURSE
-    TESTCASE_SOURCES "${CMAKE_SOURCE_DIR}/testcases/*.cpp"
+    TESTCASE_SOURCES 
+        "${CMAKE_SOURCE_DIR}/testcases_ut/*.cpp"
+        "${CMAKE_SOURCE_DIR}/testcases_ct/*.cpp"
 )
 add_test_executable(
     TARGET test_emshell
     TESTCASE_SOURCES ${TESTCASE_SOURCES}
-    PRODUCT_LIBS emshell
+    PRODUCT_LIBS
+        emshell_util 
+        emshell_core
 )
 add_coverage_target(
     TARGET cov
